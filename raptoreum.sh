@@ -7,8 +7,8 @@ COIN_PORT="10226"
 RPC_PORT="8484"
 COIN_TAR="raptoreum-ubuntu20-2.0.3.01-mainnet-.tar.gz"
 COIN_URL="https://github.com/Raptor3um/raptoreum/releases/download/2.0.3.01-mainnet/${COIN_TAR}"
-BOOTSTRAP_URL="https://bitoreum.cc/bootstrap/bootstrap.zip"
-POWCACHE_URL="https://github.com/Nikovash/bitoreum/releases/download/v4.1.0.0/powcache.dat"
+BOOTSTRAP_URL=""
+POWCACHE_URL=""
 
 # Ensure required packages are installed
 sudo apt update && sudo apt install -y wget unzip nano
