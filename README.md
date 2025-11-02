@@ -1,4 +1,4 @@
-# 🪙 Smartnode Setup
+# 🪙 Smartnode Setup - Ubuntu 20.04
 
 Easily set up and install multiple coins with interactive scripts.
 
