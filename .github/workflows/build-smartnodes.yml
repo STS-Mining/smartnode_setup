@@ -1,0 +1,49 @@
+name: Build All Smartnode Daemons
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip tar nano fail2ban ufw
+
+      - name: Make run.sh executable
+        run: chmod +x ./run.sh
+
+      - name: Run all coin scripts non-interactively
+        run: |
+          # Automatically answer 'yes' to all prompts
+          yes | bash ./run.sh
+
+      - name: List installed coin binaries
+        run: |
+          echo "Listing coin directories:"
+          ls -lh $HOME
+          for dir in $HOME/*; do
+            if [ -d "$dir" ]; then
+              echo "Contents of $dir:"
+              ls -lh "$dir"
+            fi
+          done
+
+      - name: Upload all coin artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coin-daemons
+          path: |
+            $HOME/babacoin*
+            $HOME/bitoreum*
+            $HOME/fewbit*
+            $HOME/raptoreum*
+            $HOME/yerbas*

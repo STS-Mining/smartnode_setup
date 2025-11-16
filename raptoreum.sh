@@ -16,7 +16,6 @@ sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
 sudo ufw allow $COIN_PORT/tcp
-sudo ufw allow $RPC_PORT/tcp
 sudo ufw enable
 
 # Backup existing jail.local
