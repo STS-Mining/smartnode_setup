@@ -95,12 +95,6 @@ fi
 
 echo "✅ Installation complete."
 
-# Prompt user to review configuration
-read -p "Would you like to review the config file now? (y/n): " ans
-if [[ "$ans" =~ ^[Yy]$ ]]; then
-    nano "$WORK_DIR/$COIN_NAME.conf"
-fi
-
 chmod +x "$COIN_DIR"/*d || true
 
 read -p "Start the daemon now? (y/n): " start_ans
