@@ -41,7 +41,7 @@ jobs:
           done
 
       - name: Upload all coin artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coin-daemons
           path: |
