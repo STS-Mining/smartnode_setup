@@ -3,15 +3,16 @@ name: Build All Smartnode Daemons
 on:
   push:
     branches: [main]
-  workflow_dispatch: # allows manual trigger
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |
@@ -38,7 +39,7 @@ jobs:
           done
 
       - name: Upload all coin artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: coin-daemons
           path: |
