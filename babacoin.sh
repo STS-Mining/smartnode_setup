@@ -11,9 +11,33 @@ COIN_URL="https://github.com/babacoinbbc/babacoin/releases/download/v.1.0.0/${CO
 BOOTSTRAP_URL="https://github.com/babacoinbbc/babacoin/releases/download/v.1.0.0/bootstrap.zip"
 
 # Ensure required packages are installed
-sudo apt update && sudo apt install -y wget unzip nano
+sudo apt update && sudo apt install -y wget unzip nano fail2ban
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
 sudo ufw allow $COIN_PORT/tcp
 sudo ufw allow $RPC_PORT/tcp
+sudo ufw enable
+
+# Backup existing jail.local
+sudo cp /etc/fail2ban/jail.local /etc/fail2ban/jail.local.bak.$(date +%F_%T)
+
+# Remove existing [sshd] section to avoid duplicates
+sudo sed -i '/^\[sshd\]/,/^$/d' /etc/fail2ban/jail.local
+
+# Append new [sshd] section
+sudo tee -a /etc/fail2ban/jail.local > /dev/null <<EOL
+
+[sshd]
+enabled = true
+port = 22
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+EOL
+
+# Restart Fail2Ban to apply changes
+sudo systemctl restart fail2ban
 
 # Create base directories
 COIN_DIR="$HOME/$COIN_NAME"
