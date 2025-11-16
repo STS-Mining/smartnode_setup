@@ -10,29 +10,28 @@ COIN_URL="https://github.com/fewbit-network/Core-Wallet/releases/download/TheFor
 BOOTSTRAP_URL="https://github.com/fewbit-network/Core-Wallet/releases/download/TheForge/FewBit_BootStrap.zip"
 
 # Ensure required packages are installed
-sudo apt update && sudo apt install -y wget unzip nano fail2ban
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow ssh
-sudo ufw allow $COIN_PORT/tcp
-sudo ufw enable
+if [ -z "$SKIP_FIREWALL" ]; then
+    echo "🚨 Setting up firewall and fail2ban..."
+    sudo apt update && sudo apt install -y wget unzip nano fail2ban ufw
 
-# Backup existing jail.local
-sudo cp /etc/fail2ban/jail.local /etc/fail2ban/jail.local.bak.$(date +%F_%T)
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+    sudo ufw allow ssh
+    sudo ufw allow $COIN_PORT/tcp
+    sudo ufw --force enable
 
-# Remove existing [sshd] section to avoid duplicates
-sudo sed -i '/^\[sshd\]/,/^$/d' /etc/fail2ban/jail.local
-
-# Append new [sshd] section
-sudo tee -a /etc/fail2ban/jail.local > /dev/null <<EOL
-
+    sudo mkdir -p /etc/fail2ban
+    sudo tee /etc/fail2ban/jail.local > /dev/null <<EOF
 [sshd]
 enabled = true
 port = 22
 filter = sshd
 logpath = /var/log/auth.log
 maxretry = 3
-EOL
+EOF
+else
+    echo "⚠️ Skipping firewall and fail2ban setup (CI mode)."
+fi
 
 # Restart Fail2Ban to apply changes
 sudo systemctl restart fail2ban

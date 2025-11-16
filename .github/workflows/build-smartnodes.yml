@@ -26,6 +26,8 @@ jobs:
 
       - name: Run all coin scripts non-interactively
         run: |
+          # Skip fail2ban and ufw in CI
+          export SKIP_FIREWALL=true
           # Automatically answer 'yes' to all prompts
           yes | bash ./run.sh
 
